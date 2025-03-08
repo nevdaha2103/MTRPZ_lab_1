@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strconv"
+	"strings"
 )
 
 func parseFloat(input string) (float64, error) {
@@ -30,6 +33,32 @@ func getUserInput() (float64, float64, float64) {
 				continue
 			}
 			break
+		}
+	}
+	return coefficients[0], coefficients[1], coefficients[2]
+}
+
+func fetchParamsFromFile() (float64, float64, float64) {
+	var coefficients [3]float64
+	filePath := os.Args[1]
+	file, err := os.Open(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	var content string
+	if scanner.Scan() {
+		content = scanner.Text()
+	}
+	params := strings.Split(content, " ")
+	if len(params) != 3 {
+		panic("invalid input")
+	}
+	for i := 0; i < 3; i++ {
+		coefficients[i], err = parseFloat(params[i])
+		if err != nil {
+			panic(err)
 		}
 	}
 	return coefficients[0], coefficients[1], coefficients[2]
