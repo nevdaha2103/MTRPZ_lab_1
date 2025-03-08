@@ -1,20 +1,36 @@
 package main
 
 import (
-	"math"
+	"fmt"
+	"strconv"
 )
 
-func computeRoots(a, b, c float64) (*float64, *float64) {
-	discriminant := b*b - 4*a*c
-	if discriminant < 0 {
-		return nil, nil
+func parseFloat(input string) (float64, error) {
+	value, err := strconv.ParseFloat(input, 64)
+	if err != nil {
+		return 0, fmt.Errorf("invalid number: %v", err)
 	}
-	if discriminant == 0 {
-		root := -b / (2 * a)
-		return &root, nil
+	return value, nil
+}
+
+func getUserInput() (float64, float64, float64) {
+	var inputs [3]string
+	var coefficients [3]float64
+	var err error
+	labels := [3]string{"a", "b", "c"}
+	fmt.Println("Please enter the coefficients:")
+
+	for i, label := range labels {
+		for {
+			fmt.Printf("%v = ", label)
+			fmt.Scan(&inputs[i])
+			coefficients[i], err = parseFloat(inputs[i])
+			if err != nil {
+				fmt.Printf("Error. Expected a valid real number, got '%v' instead\n", inputs[i])
+				continue
+			}
+			break
+		}
 	}
-	sqrtVal := math.Sqrt(discriminant)
-	root1 := (-b - sqrtVal) / (2 * a)
-	root2 := (-b + sqrtVal) / (2 * a)
-	return &root1, &root2
+	return coefficients[0], coefficients[1], coefficients[2]
 }
