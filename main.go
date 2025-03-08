@@ -41,10 +41,13 @@ func getUserInput() (float64, float64, float64) {
 
 func fetchParamsFromFile() (float64, float64, float64) {
 	var coefficients [3]float64
+	if len(os.Args) <= 1 {
+		panic("File path not provided. Please provide a file path as an argument.")
+	}
 	filePath := os.Args[1]
 	file, err := os.Open(filePath)
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("Error opening file: %v", err))
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -54,12 +57,12 @@ func fetchParamsFromFile() (float64, float64, float64) {
 	}
 	params := strings.Split(content, " ")
 	if len(params) != 3 {
-		panic("invalid input")
+		panic("Invalid input. Expected exactly 3 coefficients in the file.")
 	}
 	for i := 0; i < 3; i++ {
 		coefficients[i], err = parseFloat(params[i])
 		if err != nil {
-			panic(err)
+			panic(fmt.Sprintf("Error parsing number: %v", err))
 		}
 	}
 	return coefficients[0], coefficients[1], coefficients[2]
