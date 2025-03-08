@@ -63,3 +63,15 @@ func fetchParamsFromFile() (float64, float64, float64) {
 	}
 	return coefficients[0], coefficients[1], coefficients[2]
 }
+
+func displayResults(root1, root2 *float64) {
+	if root1 == nil {
+		fmt.Println("No real roots found")
+		return
+	}
+	if root2 == nil {
+		fmt.Printf("One root found: %f\n", *root1)
+		return
+	}
+	fmt.Printf("Two roots found: %f, %f\n", *root1, *root2)
+}
